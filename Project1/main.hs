@@ -27,13 +27,13 @@ alphaRenaming :: Lexp -> Lexp
 alphaRenaming lexp = lexp
 
 betaReduction :: Lexp -> Lexp
-betaReduction lexp -> lexp
+betaReduction lexp = lexp
 
 etaReduction :: Lexp -> Lexp
-etaReduction lexp -> lexp
+etaReduction lexp = lexp
 
 reducer :: Lexp -> Lexp
-reducer lexp = lexp
+reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
 
 -- Entry point of program
 main = do
