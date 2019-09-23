@@ -23,6 +23,15 @@ id' lexp@(Apply _ _) = lexp
 -- You will need to write a reducer that does something more than
 -- return whatever it was given, of course!
 
+alphaRenaming :: Lexp -> Lexp
+alphaRenaming lexp = lexp
+
+betaReduction :: Lexp -> Lexp
+betaReduction lexp -> lexp
+
+etaReduction :: Lexp -> Lexp
+etaReduction lexp -> lexp
+
 reducer :: Lexp -> Lexp
 reducer lexp = lexp
 
