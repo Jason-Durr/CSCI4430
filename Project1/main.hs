@@ -25,7 +25,9 @@ id' lexp@(Apply _ _) = lexp
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-alphaRenaming lexp = lexp
+    alphaRenaming (Atom v) = 
+    alphaRenaming (Lambda exp1 exp2) = 
+    alphaRenaming (Apply exp1 exp2) = 
 
 betaReduction :: Lexp -> Lexp
 betaReduction lexp = lexp
