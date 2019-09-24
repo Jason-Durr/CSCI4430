@@ -23,12 +23,14 @@ id' lexp@(Apply _ _) = lexp
 -- You will need to write a reducer that does something more than
 -- return whatever it was given, of course!
 
+-- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
 alphaRenaming lexp = lexp
 
 betaReduction :: Lexp -> Lexp
 betaReduction lexp = lexp
 
+--η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
 etaReduction lexp = lexp
 
