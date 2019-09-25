@@ -42,11 +42,14 @@ bHelper org@(Apply exp1 exp2) lexp =
         then Apply org lexp
         else betaReduction (Apply (betaReduction org) lexp)
 
+-- will replace any bound variables with a new variable
+aHelper :: Lexp -> Lexp -> Lexp
+
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
 alphaRenaming org@(Atom v) = (Atom v)
-alphaRenaming (Lambda v exp) = 
+alphaRenaming (Lambda v exp) = aHelper (Atom v) exp
 alphaRenaming (Apply exp1 exp2) = Apply (alphaRenaming exp1) (alphaRenaming exp2)
 
 betaReduction :: Lexp -> Lexp
