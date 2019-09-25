@@ -24,35 +24,35 @@ id' lexp@(Apply _ _) = lexp
 -- return whatever it was given, of course!
 --may have to declare tar as atom
 findAtom :: Lexp -> Lexp -> Lexp -> Lexp
-findAtom tar Lexp@(Atom s) rep= 
+findAtom tar org@(Atom s) rep = 
     if (s == tar)
         then rep
         else s
-findAtom tar Lexp@(Lambda v exp) rep = findAtom tar exp rep
-findAtom tar Lexp@(Apply exp1 exp2) rep = (Apply (findAtom tar exp1 rep) (findAtom tar exp2 rep))
+findAtom tar org@(Lambda v exp) rep = findAtom tar exp rep
+findAtom tar org@(Apply exp1 exp2) rep = (Apply (findAtom tar exp1 rep) (findAtom tar exp2 rep))
 
 bHelper :: Lexp -> Lexp -> Lexp
-bHelper Lexp@((Atom v) lexp) = Apply v lexp
-bHelper Lexp@((Lambda v exp) lexp) = findAtom v exp lexp
+bHelper org@((Atom v) lexp) = Apply v lexp
+bHelper org@((Lambda v exp) lexp) = findAtom v exp lexp
 
-bHelper Lexp@((Apply exp1 exp2) lexp) = 
+bHelper org@((Apply exp1 exp2) lexp) = 
 
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-alphaRenaming Lexp@(Atom v) = v
+alphaRenaming org@(Atom v) = v
 -- alphaRenaming (Lambda exp1 exp2) = 
 -- alphaRenaming (Apply exp1 exp2) = 
 
 betaReduction :: Lexp -> Lexp
-betaReduction Lexp@(Atom v) = v
-betaReduction Lexp@(Lambda v exp) = (Lambda v betaReduction exp )
-betaReduction Lexp@(Apply exp1 exp2) = do 
+betaReduction org@(Atom v) = v
+betaReduction org@(Lambda v exp) = (Lambda v betaReduction exp )
+betaReduction org@(Apply exp1 exp2) = do 
     return (bHelper exp1 exp2)
 
 --η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
-etaReduction Lexp@(Atom v) = v
+etaReduction org@(Atom v) = v
 -- etaReduction (Lambda exp1 exp2) = 
 -- etaReduction (Apply exp1 exp2) = 
 
