@@ -42,6 +42,27 @@ bHelper org@(Apply exp1 exp2) lexp =
         then Apply org lexp
         else betaReduction (Apply (betaReduction org) lexp)
 
+eHelper :: String -> Lexp -> Lexp
+eHelper a org@(Atom v)  = 
+    if a == v
+        then Lambda a (Atom v)
+        else org
+eHelper a org@(Lambda v exp) = 
+    if (eHelper v exp) == org
+        then org
+        else eHelper a (eHelper v exp)
+eHelper a org@(Apply exp1 exp2) = 
+    if (afinder a exp1)
+        then Lambda a (etaReduction org)
+        else etaReduction exp1
+
+afinder :: String -> Lexp -> Bool
+afinder a org@(Atom v) = 
+    if a == v
+        then True
+        else False
+afinder a org@(Lambda v exp) = afinder a exp
+afinder a org@(Apply exp1 exp2) = (afinder a exp1) || (afinder a exp2)
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
@@ -50,18 +71,18 @@ alphaRenaming org@(Atom v) = (Atom v)
 -- alphaRenaming (Apply exp1 exp2) = 
 
 betaReduction :: Lexp -> Lexp
-betaReduction org@(Atom v) = (Atom v)
+betaReduction org@(Atom v) = org
 betaReduction org@(Lambda v exp) = (Lambda v (betaReduction exp) )
 betaReduction org@(Apply exp1 exp2) = (bHelper exp1 exp2)
 
 --η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
 etaReduction org@(Atom v) = (Atom v)
--- etaReduction (Lambda exp1 exp2) = 
-etaReduction (Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
+etaReduction org@(Lambda v exp) = eHelper v exp
+etaReduction org@(Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
-reducer lexp = betaReduction lexp
+reducer lexp = etaReduction (betaReduction lexp)
 -- reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
 
 -- Entry point of program
