@@ -1,8 +1,8 @@
-\y.(y (y w))
-\y.((y w) y)
+\a.(a (y w))
+(y w)
 y
-\x.(y x)
+y
 (y y)
-a
-\x.((y \x.(z x)) x)
-\y.((y w) (y w))
+x
+(y z)
+(y w)
