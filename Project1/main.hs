@@ -1,5 +1,6 @@
 import PA1Helper
 import System.Environment (getArgs)
+import qualified Data.Map as Map
 
 -- Haskell representation of lambda expression
 -- data Lexp = Atom String | Lambda String Lexp | Apply Lexp  Lexp 
@@ -19,6 +20,7 @@ id' :: Lexp -> Lexp
 id' v@(Atom _) = v
 id' lexp@(Lambda _ _) = lexp
 id' lexp@(Apply _ _) = lexp 
+
 
 -- You will need to write a reducer that does something more than
 -- return whatever it was given, of course!
@@ -42,26 +44,57 @@ bHelper org@(Apply exp1 exp2) lexp =
         then Apply org lexp
         else betaReduction (Apply (betaReduction org) lexp)
 
+eHelper :: String -> Lexp -> Lexp
+eHelper a org@(Atom v)  = 
+    if a == v
+        then Lambda a (Atom v)
+        else org
+eHelper a org@(Lambda v exp) = 
+    if (eHelper v exp) == org
+        then org
+        else eHelper a (eHelper v exp)
+eHelper a org@(Apply exp1 exp2) = 
+    if (afinder a exp1)
+        then Lambda a (etaReduction org)
+        else etaReduction exp1
+
+afinder :: String -> Lexp -> Bool
+afinder a org@(Atom v) = 
+    if a == v
+        then True
+        else False
+afinder a org@(Lambda v exp) = afinder a exp
+afinder a org@(Apply exp1 exp2) = (afinder a exp1) || (afinder a exp2)
+
 -- will replace any bound variables with a new variable
-aHelper :: Lexp -> Lexp -> Lexp
+aHelper :: Lexp -> Lexp -> Map.Map String String -> Lexp
+aHelper var@(Atom a) org@(Atom v) varReplace =
+    if a == v
+        then Lambda (Map.findWithDefault "+" a varReplace) (Atom (Map.findWithDefault "+" a varReplace))
+        else Lambda (Map.findWithDefault "+" a varReplace) (Atom v)
+aHelper var@(Atom a) org@(Lambda v exp) varReplace = 
+    if Map.member v varReplace
+        then Lambda (Map.findWithDefault "+" a varReplace) (aHelper (Atom v) exp (Map.insert v ((Map.findWithDefault "+" v varReplace) ++ v) varReplace))
+        else Lambda (Map.findWithDefault "+" a varReplace) (aHelper (Atom v) exp (Map.insert v (v ++ v) varReplace))
+aHelper var@(Atom a) org@(Apply exp1 exp2) varReplace = var 
 
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-alphaRenaming org@(Atom v) = (Atom v)
-alphaRenaming (Lambda v exp) = aHelper (Atom v) exp
-alphaRenaming (Apply exp1 exp2) = Apply (alphaRenaming exp1) (alphaRenaming exp2)
+alphaRenaming org@(Atom a) = (Atom a)
+alphaRenaming org@(Lambda a exp) = aHelper (Atom a) exp (Map.fromList [(a, a ++ a)])
+alphaRenaming org@(Apply exp1 exp2) = Apply (alphaRenaming exp1) (exp2)
 
 betaReduction :: Lexp -> Lexp
-betaReduction org@(Atom v) = (Atom v)
+betaReduction org@(Atom v) = org
 betaReduction org@(Lambda v exp) = (Lambda v (betaReduction exp) )
 betaReduction org@(Apply exp1 exp2) = (bHelper exp1 exp2)
 
 --η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
 etaReduction org@(Atom v) = (Atom v)
--- etaReduction (Lambda exp1 exp2) = 
--- etaReduction (Apply exp1 exp2) = 
+etaReduction org@(Lambda v exp) = eHelper v exp
+etaReduction org@(Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
 reducer lexp = alphaRenaming lexp
