@@ -46,8 +46,8 @@ bHelper org@(Apply exp1 exp2) lexp =
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
 alphaRenaming org@(Atom v) = (Atom v)
--- alphaRenaming (Lambda exp1 exp2) = 
--- alphaRenaming (Apply exp1 exp2) = 
+alphaRenaming (Lambda v exp) = 
+alphaRenaming (Apply exp1 exp2) = Apply (alphaRenaming exp1) (alphaRenaming exp2)
 
 betaReduction :: Lexp -> Lexp
 betaReduction org@(Atom v) = (Atom v)
@@ -61,7 +61,7 @@ etaReduction org@(Atom v) = (Atom v)
 -- etaReduction (Apply exp1 exp2) = 
 
 reducer :: Lexp -> Lexp
-reducer lexp = betaReduction lexp
+reducer lexp = alphaRenaming lexp
 -- reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
 
 -- Entry point of program
