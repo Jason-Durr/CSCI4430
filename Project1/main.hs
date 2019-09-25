@@ -22,19 +22,39 @@ id' lexp@(Apply _ _) = lexp
 
 -- You will need to write a reducer that does something more than
 -- return whatever it was given, of course!
+--may have to declare tar as atom
+findAtom :: Lexp -> Lexp -> Lexp -> Lexp
+findAtom tar (Atom s) rep= 
+    if (s == tar)
+        then rep
+        else s
+findAtom tar (Lambda v exp) rep = findAtom tar exp rep
+findAtom tar (Apply exp1 exp2) rep = (Apply (findAtom tar exp1 rep) (findAtom tar exp2 rep))
+
+bHelper :: Lexp -> Lexp -> Lexp
+bHelper ((Atom v) lexp) = Apply v lexp
+bHelper ((Lambda v exp) lexp) = findAtom v exp lexp
+
+bHelper ((Apply exp1 exp2) lexp) = 
+
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-    alphaRenaming (Atom v) = 
-    alphaRenaming (Lambda exp1 exp2) = 
-    alphaRenaming (Apply exp1 exp2) = 
+alphaRenaming (Atom v) = v
+-- alphaRenaming (Lambda exp1 exp2) = 
+-- alphaRenaming (Apply exp1 exp2) = 
 
 betaReduction :: Lexp -> Lexp
-betaReduction lexp = lexp
+betaReduction (Atom v) = v
+betaReduction (Lambda v exp) = (Lambda v betaReduction exp )
+betaReduction (Apply exp1 exp2) = do 
+    return (bHelper exp1 exp2)
 
 --η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
-etaReduction lexp = lexp
+etaReduction (Atom v) = v
+-- etaReduction (Lambda exp1 exp2) = 
+-- etaReduction (Apply exp1 exp2) = 
 
 reducer :: Lexp -> Lexp
 reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
