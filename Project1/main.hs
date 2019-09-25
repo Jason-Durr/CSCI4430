@@ -58,7 +58,7 @@ betaReduction org@(Apply exp1 exp2) = (bHelper exp1 exp2)
 etaReduction :: Lexp -> Lexp
 etaReduction org@(Atom v) = (Atom v)
 -- etaReduction (Lambda exp1 exp2) = 
--- etaReduction (Apply exp1 exp2) = 
+etaReduction (Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
 reducer lexp = betaReduction lexp
