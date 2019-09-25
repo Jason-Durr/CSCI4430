@@ -25,39 +25,44 @@ id' lexp@(Apply _ _) = lexp
 --may have to declare tar as atom
 findAtom :: Lexp -> Lexp -> Lexp -> Lexp
 findAtom tar org@(Atom s) rep = 
-    if (s == tar)
+    if ((Atom s) == tar)
         then rep
-        else s
-findAtom tar org@(Lambda v exp) rep = findAtom tar exp rep
+        else (Atom s)
+findAtom tar org@(Lambda v exp) rep = (Lambda v (findAtom tar exp rep))
 findAtom tar org@(Apply exp1 exp2) rep = (Apply (findAtom tar exp1 rep) (findAtom tar exp2 rep))
 
 bHelper :: Lexp -> Lexp -> Lexp
-bHelper org@((Atom v) lexp) = Apply v lexp
-bHelper org@((Lambda v exp) lexp) = findAtom v exp lexp
-
-bHelper org@((Apply exp1 exp2) lexp) = 
+bHelper org@(Atom v) lexp = Apply org lexp
+bHelper org@(Lambda v exp) lexp = 
+    if (findAtom (Atom v) exp lexp) == org
+        then org
+        else betaReduction (findAtom (Atom v) exp lexp)
+bHelper org@(Apply exp1 exp2) lexp = 
+    if (Apply (betaReduction org) lexp) == (Apply org lexp)
+        then Apply org lexp
+        else betaReduction (Apply (betaReduction org) lexp)
 
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-alphaRenaming org@(Atom v) = v
+alphaRenaming org@(Atom v) = (Atom v)
 -- alphaRenaming (Lambda exp1 exp2) = 
 -- alphaRenaming (Apply exp1 exp2) = 
 
 betaReduction :: Lexp -> Lexp
-betaReduction org@(Atom v) = v
-betaReduction org@(Lambda v exp) = (Lambda v betaReduction exp )
-betaReduction org@(Apply exp1 exp2) = do 
-    return (bHelper exp1 exp2)
+betaReduction org@(Atom v) = (Atom v)
+betaReduction org@(Lambda v exp) = (Lambda v (betaReduction exp) )
+betaReduction org@(Apply exp1 exp2) = (bHelper exp1 exp2)
 
 --η-reduction can only be applied if x does not appear free in E
 etaReduction :: Lexp -> Lexp
-etaReduction org@(Atom v) = v
+etaReduction org@(Atom v) = (Atom v)
 -- etaReduction (Lambda exp1 exp2) = 
 -- etaReduction (Apply exp1 exp2) = 
 
 reducer :: Lexp -> Lexp
-reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
+reducer lexp = betaReduction lexp
+-- reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
 
 -- Entry point of program
 main = do
