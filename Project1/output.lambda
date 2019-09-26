@@ -1,10 +1,9 @@
-
-\xx.\yy.\xxx.xxx
-(\xx.y (y w))
-(\xx.y (y w))
-(\xx.xx y)
+\xx.xx
+\yy.(yy (y w))
+(y w)
+y
+y
+(y y)
 x
-((\yy.x x) y)
-(((\bb.\tt.e \xx.\yy.x) x) y)
-x
-(y (y w))
+(y z)
+(y w)

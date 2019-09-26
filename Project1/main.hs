@@ -72,11 +72,14 @@ afinder a org@(Lambda v exp) = afinder a exp
 afinder a org@(Apply exp1 exp2) = (afinder a exp1) || (afinder a exp2)
 ----------------------------------------------------------------------------------------------------------------------------
 --Alpha section
-
+replacer :: Lexp -> Map.Map String String -> Lexp
+replacer org@(Atom a) varReplace = Atom  (Map.findWithDefault  a  a varReplace)
+replacer org@(Lambda v exp) varReplace = Lambda v (replacer exp varReplace)
+replacer org@(Apply exp1 exp2) varReplace = Apply (replacer exp1 varReplace) (replacer exp2 varReplace)
 -- will replace any bound variables with a new variable
 aHelper :: Lexp -> Map.Map String String -> Lexp
-aHelper org@(Atom a) varReplace = Atom  (Map.findWithDefault  a varReplace)
-aHelper org@(Lambda v exp) varReplace = Lambda ((Map.findWithDefault  v varReplace) ++ v) (aHelper ( aHelper exp varReplace) (Map.insert v ((Map.findWithDefault  v varReplace) ++ v) varReplace))
+aHelper org@(Atom a) varReplace = Atom  (Map.findWithDefault  a  a varReplace)
+aHelper org@(Lambda v exp) varReplace = Lambda ((Map.findWithDefault v v varReplace) ++ v) (replacer ( aHelper exp varReplace) (Map.insert v ((Map.findWithDefault  v v varReplace) ++ v) varReplace))
 aHelper org@(Apply exp1 exp2) varReplace = Apply (aHelper exp1 varReplace) (aHelper exp2 varReplace)
 
 
@@ -100,8 +103,8 @@ etaReduction org@(Lambda v exp) = eHelper v exp
 etaReduction org@(Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
-reducer lexp = alphaRenaming lexp
--- reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
+-- reducer lexp = alphaRenaming lexp
+reducer lexp = etaReduction(etaReduction(betaReduction(alphaRenaming(lexp))))
 
 -- Entry point of program
 main = do
