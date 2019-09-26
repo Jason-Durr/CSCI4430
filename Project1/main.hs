@@ -1,5 +1,6 @@
 import PA1Helper
 import System.Environment (getArgs)
+import qualified Data.Map as Map
 
 -- Haskell representation of lambda expression
 -- data Lexp = Atom String | Lambda String Lexp | Apply Lexp  Lexp 
@@ -20,9 +21,14 @@ id' v@(Atom _) = v
 id' lexp@(Lambda _ _) = lexp
 id' lexp@(Apply _ _) = lexp 
 
+
 -- You will need to write a reducer that does something more than
 -- return whatever it was given, of course!
 --may have to declare tar as atom
+
+
+----------------------------------------------------------------------------------------------------------------------------
+-- Beta section
 findAtom :: Lexp -> Lexp -> Lexp -> Lexp
 findAtom tar org@(Atom s) rep = 
     if ((Atom s) == tar)
@@ -41,7 +47,8 @@ bHelper org@(Apply exp1 exp2) lexp =
     if (Apply (betaReduction org) lexp) == (Apply org lexp)
         then Apply org lexp
         else betaReduction (Apply (betaReduction org) lexp)
-
+----------------------------------------------------------------------------------------------------------------------------
+--Eta Section
 eHelper :: String -> Lexp -> Lexp
 eHelper a org@(Atom v)  = 
     if a == v
@@ -63,12 +70,23 @@ afinder a org@(Atom v) =
         else False
 afinder a org@(Lambda v exp) = afinder a exp
 afinder a org@(Apply exp1 exp2) = (afinder a exp1) || (afinder a exp2)
+----------------------------------------------------------------------------------------------------------------------------
+--Alpha section
+
+-- will replace any bound variables with a new variable
+aHelper :: Lexp -> Map.Map String String -> Lexp
+aHelper org@(Atom a) varReplace = Atom  (Map.findWithDefault  a varReplace)
+aHelper org@(Lambda v exp) varReplace = Lambda ((Map.findWithDefault  v varReplace) ++ v) (aHelper ( aHelper exp varReplace) (Map.insert v ((Map.findWithDefault  v varReplace) ++ v) varReplace))
+aHelper org@(Apply exp1 exp2) varReplace = Apply (aHelper exp1 varReplace) (aHelper exp2 varReplace)
+
 
 -- rename all variables that are bounded
 alphaRenaming :: Lexp -> Lexp
-alphaRenaming org@(Atom v) = (Atom v)
--- alphaRenaming (Lambda exp1 exp2) = 
--- alphaRenaming (Apply exp1 exp2) = 
+alphaRenaming org@(Atom a) = (Atom a)
+alphaRenaming org@(Lambda a exp) = aHelper org (Map.fromList [])
+alphaRenaming org@(Apply exp1 exp2) = Apply (alphaRenaming exp1) (alphaRenaming exp2)
+
+----------------------------------------------------------------------------------------------------------------------------
 
 betaReduction :: Lexp -> Lexp
 betaReduction org@(Atom v) = org
@@ -82,7 +100,7 @@ etaReduction org@(Lambda v exp) = eHelper v exp
 etaReduction org@(Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
-reducer lexp = etaReduction (betaReduction lexp)
+reducer lexp = alphaRenaming lexp
 -- reducer lexp = etaReduction(betaReduction(alphaRenaming(lexp)))
 
 -- Entry point of program

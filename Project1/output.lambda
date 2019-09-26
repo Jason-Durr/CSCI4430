@@ -1,8 +1,10 @@
-\y.(y (y w))
-\y.((y w) y)
-y
-y
-(y y)
+
+\xx.\yy.\xxx.xxx
+(\xx.y (y w))
+(\xx.y (y w))
+(\xx.xx y)
 x
-\x.((y z) x)
-\y.((y w) (y w))
+((\yy.x x) y)
+(((\bb.\tt.e \xx.\yy.x) x) y)
+x
+(y (y w))
