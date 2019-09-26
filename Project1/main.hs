@@ -77,17 +77,17 @@ replacer org@(Atom a) varReplace = Atom  (Map.findWithDefault  a  a varReplace)
 replacer org@(Lambda v exp) varReplace = Lambda v (replacer exp varReplace)
 replacer org@(Apply exp1 exp2) varReplace = Apply (replacer exp1 varReplace) (replacer exp2 varReplace)
 -- will replace any bound variables with a new variable
-aHelper :: Lexp -> Map.Map String String -> Lexp
-aHelper org@(Atom a) varReplace = Atom  (Map.findWithDefault  a  a varReplace)
-aHelper org@(Lambda v exp) varReplace = Lambda ((Map.findWithDefault v v varReplace) ++ v) (replacer ( aHelper exp varReplace) (Map.insert v ((Map.findWithDefault  v v varReplace) ++ v) varReplace))
-aHelper org@(Apply exp1 exp2) varReplace = Apply (aHelper exp1 varReplace) (aHelper exp2 varReplace)
+aHelper :: Lexp -> String -> Map.Map  String String -> Lexp
+aHelper org@(Atom a) addon varReplace = Atom  (Map.findWithDefault  a  a varReplace)
+aHelper org@(Lambda v exp) addon varReplace = Lambda ((Map.findWithDefault v v varReplace) ++ addon) (replacer ( aHelper exp (addon ++ "B") varReplace) (Map.insert v ((Map.findWithDefault  v v varReplace) ++ addon) varReplace))
+aHelper org@(Apply exp1 exp2) addon varReplace = Apply (aHelper exp1 (addon ++ "L") varReplace) (aHelper exp2 (addon ++ "R") varReplace)
 
 
 -- rename all variables that are bounded
-alphaRenaming :: Lexp -> Lexp
-alphaRenaming org@(Atom a) = (Atom a)
-alphaRenaming org@(Lambda a exp) = aHelper org (Map.fromList [])
-alphaRenaming org@(Apply exp1 exp2) = Apply (alphaRenaming exp1) (alphaRenaming exp2)
+alphaRenaming :: Lexp -> String -> Map.Map String String -> Lexp
+alphaRenaming org@(Atom a) addon varReplace = (Atom a)
+alphaRenaming org@(Lambda a exp) addon varReplace = aHelper org (addon ++ "B") varReplace
+alphaRenaming org@(Apply exp1 exp2) addon varReplace = Apply (alphaRenaming exp1 (addon ++ "L") varReplace) (alphaRenaming exp2 (addon ++ "R") varReplace)
 
 ----------------------------------------------------------------------------------------------------------------------------
 
@@ -103,8 +103,8 @@ etaReduction org@(Lambda v exp) = eHelper v exp
 etaReduction org@(Apply exp1 exp2) = (Apply (etaReduction exp1) (etaReduction exp2) )
 
 reducer :: Lexp -> Lexp
--- reducer lexp = alphaRenaming lexp
-reducer lexp = etaReduction(etaReduction(betaReduction(alphaRenaming(lexp))))
+-- reducer lexp = alphaRenaming lexp "" (Map.fromList [])
+reducer lexp = betaReduction(etaReduction(betaReduction (alphaRenaming lexp "" (Map.fromList []))))
 
 -- Entry point of program
 main = do
