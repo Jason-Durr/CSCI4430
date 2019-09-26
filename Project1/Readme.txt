@@ -8,4 +8,4 @@ Bugs
 Special Features
 - Alpha Renaming Convention: 
     We renamed all the bound variables by concatenating the original Atom to itself
-    Everytime we hit an apply statement we concatenated a L (Left) or a R (Right) depending on which expression we were renaming
+    Everytime we hit an apply statement we concatenated a L (Left) or a R (Right) to the variable being replaced depending on which expression we were renaming
