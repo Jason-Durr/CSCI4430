@@ -1,4 +1,6 @@
-\a.(a (y w))
+<<<<<<< HEAD
+\xBBB.xBBB
+\yLBB.(yLBB (y w))
 (y w)
 y
 y
@@ -6,3 +8,14 @@ y
 x
 (y z)
 (y w)
+=======
+\aa.\y.\x.x
+(\aa.\y.(y x) (y w))
+(\aa.\y.(x y) (y w))
+(\aa.aa y)
+\aa.(y x)
+((\aa.\x.(y x) \x.(x x)) y)
+(((\aa.\t.\e.((b t) e) \x.\y.x) x) y)
+\aa.((\x.(y x) \x.(z x)) x)
+(\aa.(\x.\y.(x y) y) (y w))
+>>>>>>> 888db88394087bae1399ce3a169702fcb302bc66
