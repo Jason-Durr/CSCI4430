@@ -1,0 +1,29 @@
+module pa2;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math; 
+
+/* Node.salsa
+ *
+ * Handles the creation of new nodes
+ *
+*/
+
+behavior Node{
+    String val;
+    Vector connections;
+
+    Node(String initVal) {
+        val = initVal;
+        connections = new Vector();
+    }
+
+    String getVal() {
+        return val;
+    }
+
+    Vector getConnections() {
+        return connections;
+    }
+}
