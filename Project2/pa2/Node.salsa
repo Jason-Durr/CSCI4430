@@ -29,6 +29,10 @@ behavior Node{
         return connections;
     }
 
+    void setVal(String newVal) {
+        val = newVal;
+    }
+
     Vector setConnections(int numNodes, int n) {
         for (int i = 0; i < n; i++) {
             connections.add((index + (int) Math.pow(2,i)) % numNodes);
