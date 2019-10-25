@@ -514,5 +514,44 @@ break;			}
 				}
 			}
 }		}
+		public void query(int ID, int fromNode, String key) {
+			int target = Hash(key, numNodes);
+			String result = queryHelper(fromNode, ID, target, key);
+			{
+				// standardOutput<-println("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+result+"\"")
+				{
+					Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+result+"\"" };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+		}
+		public String queryHelper(int next, int ID, int target, String key) {
+			if (next==target) {{
+				Token res = new Token("res");
+				{
+					// token res = nodes[next]<-getVal()
+					{
+						Object _arguments[] = {  };
+						Message message = new Message( self, nodes[next], "getVal", _arguments, null, res );
+						__messages.add( message );
+					}
+				}
+				return res;
+			}
+}			else {{
+				Token n = new Token("n");
+				{
+					// token n = nodes[next]<-query(target)
+					{
+						Object _arguments[] = { target };
+						Message message = new Message( self, nodes[next], "query", _arguments, null, n );
+						__messages.add( message );
+					}
+				}
+				String res = queryHelper(n, ID, target, key);
+				return res;
+			}
+}		}
 	}
 }

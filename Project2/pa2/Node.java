@@ -317,6 +317,18 @@ public class Node extends UniversalActor  {
 				return (int)connections.get(next_ind);
 			}
 }		}
+		public int query(int target) {
+			int next_ind = nextIndex(target);
+			{
+				// standardOutput<-println("At node "+index+" going to "+target)
+				{
+					Object _arguments[] = { "At node "+index+" going to "+target };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+			return (int)connections.get(next_ind);
+		}
 		public int nextIndex(int nodeid) {
 			if (nodeid==index) {{
 				return -1;

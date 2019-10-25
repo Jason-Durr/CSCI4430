@@ -154,5 +154,22 @@ behavior Main{
     }
     
   }
+  void query(int ID, int fromNode, String key){
+    int target = Hash(key,numNodes);
+    String result = queryHelper(fromNode, ID,  target, key);
+    standardOutput<-println("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"" + result + "\"");
+  }
+  String queryHelper(int next,int ID, int target,String key){
+    if (next == target){
+      token res = nodes[next]<-getVal();
+      return res;
+    }
+    else {
+      token n = nodes[next]<-query(target);
+      String res =  queryHelper( n, ID ,target, key);
+      return res;
+    }
+
+  }
 }
 

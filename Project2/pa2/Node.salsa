@@ -58,6 +58,14 @@ behavior Node{
         }
     }
 
+    int query(int target){
+        int next_ind = nextIndex(target);
+        
+        standardOutput<-println("At node " + index+" going to "+ target);
+        return (int)connections.get(next_ind);
+        
+    }
+
     int nextIndex(int nodeid){
         if (nodeid == index){
             return -1;
