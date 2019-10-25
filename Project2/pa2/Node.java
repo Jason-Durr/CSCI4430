@@ -268,6 +268,7 @@ public class Node extends UniversalActor  {
 		String val;
 		Vector connections;
 		int index;
+		String key;
 		int numNodes;
 		void construct(int nodeIndex){
 			val = "";
@@ -289,5 +290,27 @@ public class Node extends UniversalActor  {
 				connections.add((index+(int)Math.pow(2, i))%numNodes);
 			}
 		}
+		public int insert(int target, String key, String value) {
+			int next_ind = nextIndex(target);
+			if (next_ind<0) {{
+				this.key = key;
+				this.val = value;
+				return -1;
+			}
+}			else {{
+				return (int)connections.get(next_ind);
+			}
+}		}
+		public int nextIndex(int nodeid) {
+			if (nodeid==index) {{
+				return -1;
+			}
+}			else {if (nodeid>index) {{
+				return (int)(Math.log(nodeid-index)/Math.log(2));
+			}
+}			else {{
+				return (int)(Math.log(nodeid-index+numNodes)/Math.log(2));
+			}
+}}		}
 	}
 }

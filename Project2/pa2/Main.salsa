@@ -14,7 +14,7 @@ behavior Main{
                                                 // List of ip addr:port separated by newlines
   String nameServer = "127.0.0.1:3030";         // Default name server (2nd cmd line argument))
   public static boolean isDebug = true;       // Additional output for debugging (set to false when testing autograding)
-
+  int numNodes;
   Node[] nodes;
 
   void act(String args[]){
@@ -37,9 +37,9 @@ behavior Main{
     
     int n = Integer.parseInt(n_string);
     
-    int numNodes = (int) Math.pow(2,n);
+    numNodes = (int) Math.pow(2,n);
 
-    nodes = new Nodes[numNodes];
+    nodes = new Node[numNodes];
 
     // read available theaters
     Vector theaters = new Vector();
@@ -140,6 +140,14 @@ behavior Main{
       sum += key.charAt(i);
     }
     return sum % numNodes;
+  }
+  void insert(int fromNode, String key,String value){
+    int target = Hash(key,numNodes);
+    int next = fromNode;
+    while(next >= 0){
+      token n = nodes[next]<-insert(target,key,value);
+      next = Integer.parseInt( n);
+    } 
   }
 }
 

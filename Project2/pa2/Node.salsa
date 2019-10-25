@@ -42,15 +42,29 @@ behavior Node{
         }
     }
 
+    int insert(int target, String key, String value){
+        int next_ind = nextIndex(target);
+        //its us
+        if (next_ind < 0){
+            this.key = key;
+            this.val = value;
+            return -1;
+        }
+        //otherwise let someone else do it
+        else{
+            return (int)connections.get(next_ind);
+        }
+    }
+
     int nextIndex(int nodeid){
         if (nodeid == index){
             return -1;
         }
         else if (nodeid > index){
-            return Math.log(nodeid-index)/Math.log(2);
+            return (int)(Math.log(nodeid-index)/Math.log(2));
         }
         else {
-            return Math.log(nodeid-index+numNodes)/Math.log(2);
+            return (int)(Math.log(nodeid-index+numNodes)/Math.log(2));
         }
     }
 }

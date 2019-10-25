@@ -270,6 +270,8 @@ public class Main extends UniversalActor  {
 		String theatersFile = "";
 		String nameServer = "127.0.0.1:3030";
 		boolean isDebug = true;
+		int numNodes;
+		Node[] nodes;
 		public void act(String args[]) {
 			int argc = args.length;
 			if (argc>=1) {theatersFile = args[0];
@@ -310,8 +312,8 @@ public class Main extends UniversalActor  {
 		}
 		public void createDHT(String n_string) {
 			int n = Integer.parseInt(n_string);
-			int numNodes = (int)Math.pow(2, n);
-			Node[] nodes = new Node[numNodes];
+			numNodes = (int)Math.pow(2, n);
+			nodes = new Node[numNodes];
 			Vector theaters = new Vector();
 			String theater;
 			if (theatersFile!="") {{
@@ -471,6 +473,22 @@ break;			}
 				sum += key.charAt(i);
 			}
 			return sum%numNodes;
+		}
+		public void insert(int fromNode, String key, String value) {
+			int target = Hash(key, numNodes);
+			int next = fromNode;
+			while (next>=0) {
+				Token n = new Token("n");
+				{
+					// token n = nodes[next]<-insert(target, key, value)
+					{
+						Object _arguments[] = { target, key, value };
+						Message message = new Message( self, nodes[next], "insert", _arguments, null, n );
+						__messages.add( message );
+					}
+				}
+				next = Integer.parseInt((String)n);
+			}
 		}
 	}
 }
