@@ -33,7 +33,7 @@ behavior Node{
         val = newVal;
     }
 
-    Vector setConnections(int numNodes, int n) {
+    void setConnections(int numNodes, int n) {
         for (int i = 0; i < n; i++) {
             connections.add((index + (int) Math.pow(2,i)) % numNodes);
         }

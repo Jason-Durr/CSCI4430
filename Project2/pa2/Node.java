@@ -279,7 +279,10 @@ public class Node extends UniversalActor  {
 		public Vector getConnections() {
 			return connections;
 		}
-		public Vector setConnections(int numNodes, int n) {
+		public void setVal(String newVal) {
+			val = newVal;
+		}
+		public void setConnections(int numNodes, int n) {
 			for (int i = 0; i<n; i++){
 				connections.add((index+(int)Math.pow(2, i))%numNodes);
 			}

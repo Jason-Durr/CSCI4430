@@ -352,7 +352,14 @@ public class Main extends UniversalActor  {
 }					nodes[i] = ((Node)new Node(new UAN(uan_str), new UAL(ual_str),this).construct(i));
 				}
 				for (int i = 0; i<numNodes; i++){
-					nodes[i].setConnections(numNodes, n);
+					{
+						// nodes[i]<-setConnections(numNodes, n)
+						{
+							Object _arguments[] = { numNodes, n };
+							Message message = new Message( self, nodes[i], "setConnections", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
 				}
 			}
 }			else {{
@@ -370,7 +377,14 @@ public class Main extends UniversalActor  {
 }					nodes[i] = ((Node)new Node(this).construct(i));
 				}
 				for (int i = 0; i<numNodes; i++){
-					nodes[i].setConnections(numNodes, n);
+					{
+						// nodes[i]<-setConnections(numNodes, n)
+						{
+							Object _arguments[] = { numNodes, n };
+							Message message = new Message( self, nodes[i], "setConnections", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
 				}
 			}
 }		}

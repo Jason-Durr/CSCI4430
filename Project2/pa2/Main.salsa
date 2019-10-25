@@ -68,7 +68,7 @@ behavior Main{
         nodes[i] = new Node(i) at (new UAN(uan_str), new UAL(ual_str));
       }
       for (int i = 0; i < numNodes; i++) {
-        nodes[i].setConnections(numNodes, n);
+        nodes[i]<-setConnections(numNodes, n);
       }
     }
     else{
@@ -80,7 +80,7 @@ behavior Main{
         nodes[i] = new Node(i);
       }
       for (int i = 0; i < numNodes; i++) {
-        nodes[i].setConnections(numNodes, n);
+        nodes[i]<-setConnections(numNodes, n);
       }
     }
    
