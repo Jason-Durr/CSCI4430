@@ -13,10 +13,12 @@ import java.lang.Math;
 behavior Node{
     String val;
     Vector connections;
+    int index;
 
-    Node(String initVal) {
-        val = initVal;
+    Node(int nodeIndex) {
+        val = "";
         connections = new Vector();
+        index = nodeIndex;
     }
 
     String getVal() {
@@ -25,5 +27,11 @@ behavior Node{
 
     Vector getConnections() {
         return connections;
+    }
+
+    Vector setConnections(int numNodes, int n) {
+        for (int i = 0; i < n; i++) {
+            connections.add((index + (int) Math.pow(2,i)) % numNodes);
+        }
     }
 }

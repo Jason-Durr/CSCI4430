@@ -65,9 +65,11 @@ behavior Main{
         if (isDebug){
           standardOutput<-println("Creating node "+uan_str+" at "+ual_str);
         }
-        nodes[i] = new Node() at (new UAN(uan_str), new UAL(ual_str));
+        nodes[i] = new Node(i) at (new UAN(uan_str), new UAL(ual_str));
       }
-      // TODO: Connect the nodes
+      for (int i = 0; i < numNodes; i++) {
+        nodes[i].setConnections(numNodes, n);
+      }
     }
     else{
       //If no theaters file, create actors locally
@@ -75,9 +77,11 @@ behavior Main{
         if (isDebug){
           standardOutput<-println("Creating node "+i+" locally");
         }
-        nodes[i] = new Node();
+        nodes[i] = new Node(i);
       }
-      // TODO: Connect the nodes
+      for (int i = 0; i < numNodes; i++) {
+        nodes[i].setConnections(numNodes, n);
+      }
     }
    
   }
