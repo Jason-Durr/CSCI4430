@@ -268,6 +268,7 @@ public class Node extends UniversalActor  {
 		String val;
 		Vector connections;
 		int index;
+		int numNodes;
 		void construct(int nodeIndex){
 			val = "";
 			connections = new Vector();
@@ -283,6 +284,7 @@ public class Node extends UniversalActor  {
 			val = newVal;
 		}
 		public void setConnections(int numNodes, int n) {
+			this.numNodes = numNodes;
 			for (int i = 0; i<n; i++){
 				connections.add((index+(int)Math.pow(2, i))%numNodes);
 			}
