@@ -534,45 +534,33 @@ break;			}
 			}
 		}
 		public void queryHelper(int next, int fromNode, int ID, int target, String key) {
-			{
-				// standardError<-println(next)
-				{
-					Object _arguments[] = { next };
-					Message message = new Message( self, standardError, "println", _arguments, null, null );
-					__messages.add( message );
-				}
-			}
 			if (next==target) {{
+				Token n = new Token("n");
 				{
+					Token token_3_0 = new Token();
+					Token token_3_2 = new Token();
 					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"")
 					{
 						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"" };
-						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						Message message = new Message( self, standardOutput, "print", _arguments, null, token_3_0 );
 						__messages.add( message );
 					}
-				}
-				Token n = new Token("n");
-				{
 					// token n = nodes[next]<-getVal()
 					{
 						Object _arguments[] = {  };
-						Message message = new Message( self, nodes[next], "getVal", _arguments, null, n );
+						Message message = new Message( self, nodes[next], "getVal", _arguments, token_3_0, n );
 						__messages.add( message );
 					}
-				}
-				{
 					// standardOutput<-print(n)
 					{
 						Object _arguments[] = { n };
-						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_2 );
 						__messages.add( message );
 					}
-				}
-				{
 					// standardOutput<-print("\"\n")
 					{
 						Object _arguments[] = { "\"\n" };
-						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						Message message = new Message( self, standardOutput, "print", _arguments, token_3_2, null );
 						__messages.add( message );
 					}
 				}
