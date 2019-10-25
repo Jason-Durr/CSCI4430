@@ -454,6 +454,14 @@ break;				}
 }				int queryID = Integer.parseInt(tokens[1]);
 				int fromNode = Integer.parseInt(tokens[2]);
 				String key = tokens[3];
+				{
+					// query(queryID, fromNode, key)
+					{
+						Object _arguments[] = { queryID, fromNode, key };
+						Message message = new Message( self, self, "query", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 break;			}
 			default: 			{
 				// standardError<-println("[error] Command \""+tokens[0]+"\" not recognized.")
@@ -516,28 +524,58 @@ break;			}
 }		}
 		public void query(int ID, int fromNode, String key) {
 			int target = Hash(key, numNodes);
-			String result = queryHelper(fromNode, ID, target, key);
 			{
-				// standardOutput<-println("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+result+"\"")
+				// queryHelper(fromNode, fromNode, ID, target, key)
 				{
-					Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+result+"\"" };
-					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					Object _arguments[] = { fromNode, fromNode, ID, target, key };
+					Message message = new Message( self, self, "queryHelper", _arguments, null, null );
 					__messages.add( message );
 				}
 			}
 		}
-		public String queryHelper(int next, int ID, int target, String key) {
-			if (next==target) {{
-				Token res = new Token("res");
+		public void queryHelper(int next, int fromNode, int ID, int target, String key) {
+			{
+				// standardError<-println(next)
 				{
-					// token res = nodes[next]<-getVal()
+					Object _arguments[] = { next };
+					Message message = new Message( self, standardError, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+			if (next==target) {{
+				{
+					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"")
 					{
-						Object _arguments[] = {  };
-						Message message = new Message( self, nodes[next], "getVal", _arguments, null, res );
+						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"" };
+						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
 						__messages.add( message );
 					}
 				}
-				return res;
+				Token n = new Token("n");
+				{
+					// token n = nodes[next]<-getVal()
+					{
+						Object _arguments[] = {  };
+						Message message = new Message( self, nodes[next], "getVal", _arguments, null, n );
+						__messages.add( message );
+					}
+				}
+				{
+					// standardOutput<-print(n)
+					{
+						Object _arguments[] = { n };
+						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
+				{
+					// standardOutput<-print("\"\n")
+					{
+						Object _arguments[] = { "\"\n" };
+						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 			}
 }			else {{
 				Token n = new Token("n");
@@ -549,8 +587,14 @@ break;			}
 						__messages.add( message );
 					}
 				}
-				String res = queryHelper(n, ID, target, key);
-				return res;
+				{
+					// queryHelper(n, fromNode, ID, target, key)
+					{
+						Object _arguments[] = { n, fromNode, ID, target, key };
+						Message message = new Message( self, self, "queryHelper", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 			}
 }		}
 	}
