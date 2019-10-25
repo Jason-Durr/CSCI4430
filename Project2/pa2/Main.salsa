@@ -108,6 +108,7 @@ behavior Main{
         int fromNode = Integer.parseInt(tokens[1]);
         String key = tokens[2];
         String value = tokens[3];
+        insert(fromNode,key,value);
 		    // TODO: Do something with the parsed insert
         break;
       }
@@ -143,11 +144,15 @@ behavior Main{
   }
   void insert(int fromNode, String key,String value){
     int target = Hash(key,numNodes);
-    int next = fromNode;
-    while(next >= 0){
+    insertHelper(fromNode, target, key, value);
+  }
+
+  void insertHelper(int next, int target, String key, String value){
+    if (next >= 0){
       token n = nodes[next]<-insert(target,key,value);
-      next = Integer.parseInt( n);
-    } 
+      insertHelper(n, target, key, value);
+    }
+    
   }
 }
 

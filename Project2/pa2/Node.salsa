@@ -48,10 +48,12 @@ behavior Node{
         if (next_ind < 0){
             this.key = key;
             this.val = value;
+            standardOutput<-println("Insert at " + target +" "+ key +" "+ value);
             return -1;
         }
         //otherwise let someone else do it
         else{
+            standardOutput<-println("At node " + index+" going to "+ target);
             return (int)connections.get(next_ind);
         }
     }

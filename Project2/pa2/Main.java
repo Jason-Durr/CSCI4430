@@ -431,6 +431,14 @@ break;				}
 }				int fromNode = Integer.parseInt(tokens[1]);
 				String key = tokens[2];
 				String value = tokens[3];
+				{
+					// insert(fromNode, key, value)
+					{
+						Object _arguments[] = { fromNode, key, value };
+						Message message = new Message( self, self, "insert", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 break;			}
 			case "query": {
 				if (tokens.length<4) {{
@@ -476,8 +484,17 @@ break;			}
 		}
 		public void insert(int fromNode, String key, String value) {
 			int target = Hash(key, numNodes);
-			int next = fromNode;
-			while (next>=0) {
+			{
+				// insertHelper(fromNode, target, key, value)
+				{
+					Object _arguments[] = { fromNode, target, key, value };
+					Message message = new Message( self, self, "insertHelper", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+		}
+		public void insertHelper(int next, int target, String key, String value) {
+			if (next>=0) {{
 				Token n = new Token("n");
 				{
 					// token n = nodes[next]<-insert(target, key, value)
@@ -487,8 +504,15 @@ break;			}
 						__messages.add( message );
 					}
 				}
-				next = Integer.parseInt((String)n);
+				{
+					// insertHelper(n, target, key, value)
+					{
+						Object _arguments[] = { n, target, key, value };
+						Message message = new Message( self, self, "insertHelper", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 			}
-		}
+}		}
 	}
 }

@@ -295,9 +295,25 @@ public class Node extends UniversalActor  {
 			if (next_ind<0) {{
 				this.key = key;
 				this.val = value;
+				{
+					// standardOutput<-println("Insert at "+target+" "+key+" "+value)
+					{
+						Object _arguments[] = { "Insert at "+target+" "+key+" "+value };
+						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 				return -1;
 			}
 }			else {{
+				{
+					// standardOutput<-println("At node "+index+" going to "+target)
+					{
+						Object _arguments[] = { "At node "+index+" going to "+target };
+						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 				return (int)connections.get(next_ind);
 			}
 }		}
