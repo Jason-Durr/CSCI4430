@@ -161,10 +161,12 @@ behavior Main{
   }
   void queryHelper(int next,int fromNode, int ID, int target,String key){
     if (next == target){
-      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"" )@
+      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"" )@ 
       token n = nodes[next]<-getVal()@
-      standardOutput<-print(n)@
-      standardOutput<-println("\"");
+      standardOutput<-print( n)@
+      standardOutput<-print("\"\n");
+       
+      
     }
     else {
       token n = nodes[next]<-query(target);

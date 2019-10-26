@@ -557,10 +557,10 @@ break;			}
 						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_2 );
 						__messages.add( message );
 					}
-					// standardOutput<-println("\"")
+					// standardOutput<-print("\"\n")
 					{
-						Object _arguments[] = { "\"" };
-						Message message = new Message( self, standardOutput, "println", _arguments, token_3_2, null );
+						Object _arguments[] = { "\"\n" };
+						Message message = new Message( self, standardOutput, "print", _arguments, token_3_2, null );
 						__messages.add( message );
 					}
 				}
