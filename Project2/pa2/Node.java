@@ -265,24 +265,36 @@ public class Node extends UniversalActor  {
 			}
 		}
 
-		String val;
+		Map keyVals = new HashMap();
 		Vector connections;
 		int index;
-		String key;
 		int numNodes;
 		void construct(int nodeIndex){
-			val = "";
 			connections = new Vector();
 			index = nodeIndex;
 		}
-		public String getVal() {
-			return val;
+		public String getVal(String key) {
+			{
+				// standardOutput<-println("Here")
+				{
+					Object _arguments[] = { "Here" };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
+			if (keyVals.containsKey(key)) {{
+				return (String)keyVals.get(key);
+			}
+}			try {
+				Thread.sleep(500);
+			}
+			catch (Exception except) {
+			}
+
+			return (String)getVal(key);
 		}
 		public Vector getConnections() {
 			return connections;
-		}
-		public void setVal(String newVal) {
-			val = newVal;
 		}
 		public void setConnections(int numNodes, int n) {
 			this.numNodes = numNodes;
@@ -290,43 +302,18 @@ public class Node extends UniversalActor  {
 				connections.add((index+(int)Math.pow(2, i))%numNodes);
 			}
 		}
-		public int insert(int target, String key, String value) {
+		public int insert(int target, String aKey, String aValue) {
 			int next_ind = nextIndex(target);
 			if (next_ind<0) {{
-				this.key = key;
-				this.val = value;
-				{
-					// standardOutput<-println("Insert at "+target+" "+key+" "+value)
-					{
-						Object _arguments[] = { "Insert at "+target+" "+key+" "+value };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
-						__messages.add( message );
-					}
-				}
+				keyVals.put(aKey, aValue);
 				return -1;
 			}
 }			else {{
-				{
-					// standardOutput<-println("At node "+index+" going to "+target)
-					{
-						Object _arguments[] = { "At node "+index+" going to "+target };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
-						__messages.add( message );
-					}
-				}
 				return (int)connections.get(next_ind);
 			}
 }		}
 		public int query(int target) {
 			int next_ind = nextIndex(target);
-			{
-				// standardOutput<-println("At node "+index+" going to "+target)
-				{
-					Object _arguments[] = { "At node "+index+" going to "+target };
-					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
-					__messages.add( message );
-				}
-			}
 			return (int)connections.get(next_ind);
 		}
 		public int nextIndex(int nodeid) {

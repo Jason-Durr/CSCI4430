@@ -1,0 +1,4 @@
+Request 1 sent to agent 2: Value for key "big" stored in node 306: "abcde"
+Request 2 sent to agent 90: Value for key "small" stored in node 537: "fghijk"
+Request 3 sent to agent 300: Value for key "medium" stored in node 641: "lmno"
+

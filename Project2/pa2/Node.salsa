@@ -11,28 +11,31 @@ import java.lang.Math;
 */
 
 behavior Node{
-    String val;
+    Map keyVals = new HashMap();
     Vector connections;
     int index;
-    String key;
     int numNodes;
 
     Node(int nodeIndex) {
-        val = "";
         connections = new Vector();
         index = nodeIndex;
     }
 
-    String getVal() {
-        return val;
+    String getVal(String key) {
+        standardOutput <- println("Here");
+        if (keyVals.containsKey(key)) {
+            return (String) keyVals.get(key);
+        }
+        try {
+            Thread.sleep(500);
+        } catch (Exception except) {
+            // Waiting for key
+        }
+        return (String) getVal(key);
     }
 
     Vector getConnections() {
         return connections;
-    }
-
-    void setVal(String newVal) {
-        val = newVal;
     }
 
     void setConnections(int numNodes, int n) {
@@ -42,26 +45,21 @@ behavior Node{
         }
     }
 
-    int insert(int target, String key, String value){
+    int insert(int target, String aKey, String aValue){
         int next_ind = nextIndex(target);
         //its us
         if (next_ind < 0){
-            this.key = key;
-            this.val = value;
-            standardOutput<-println("Insert at " + target +" "+ key +" "+ value);
+            keyVals.put(aKey, aValue);
             return -1;
         }
         //otherwise let someone else do it
         else{
-            standardOutput<-println("At node " + index+" going to "+ target);
             return (int)connections.get(next_ind);
         }
     }
 
     int query(int target){
         int next_ind = nextIndex(target);
-        
-        standardOutput<-println("At node " + index+" going to "+ target);
         return (int)connections.get(next_ind);
         
     }

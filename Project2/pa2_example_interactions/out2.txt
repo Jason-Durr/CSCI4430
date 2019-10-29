@@ -1,0 +1,2 @@
+Request 8 sent to agent 1: Value for key "foobar" stored in node 9: "baz"
+Request 1 sent to agent 3: Value for key "erlang" stored in node 9: "isGreat"

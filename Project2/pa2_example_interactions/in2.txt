@@ -1,0 +1,5 @@
+4
+insert 2 foobar baz
+insert 6 erlang isGreat
+query 8 1 foobar
+query 1 3 erlang

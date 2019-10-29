@@ -1,0 +1,2 @@
+Request 12 sent to agent 1: Value for key "testing" stored in node 14: "foo"
+Request 3 sent to agent 8: Value for key "bestclass" stored in node 4: "ProgLang"

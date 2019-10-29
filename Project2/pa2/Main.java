@@ -267,9 +267,9 @@ public class Main extends UniversalActor  {
 			}
 		}
 
-		String theatersFile = "";
+		String theatersFile = "theatersFile.txt";
 		String nameServer = "127.0.0.1:3030";
-		boolean isDebug = true;
+		boolean isDebug = false;
 		int numNodes;
 		Node[] nodes;
 		public void act(String args[]) {
@@ -537,24 +537,24 @@ break;			}
 			if (next==target) {{
 				Token n = new Token("n");
 				{
-					Token token_3_0 = new Token();
+					Token token_3_1 = new Token();
 					Token token_3_2 = new Token();
+					// token n = nodes[next]<-getVal(key)
+					{
+						Object _arguments[] = { key };
+						Message message = new Message( self, nodes[next], "getVal", _arguments, null, n );
+						__messages.add( message );
+					}
 					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"")
 					{
 						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"" };
-						Message message = new Message( self, standardOutput, "print", _arguments, null, token_3_0 );
-						__messages.add( message );
-					}
-					// token n = nodes[next]<-getVal()
-					{
-						Object _arguments[] = {  };
-						Message message = new Message( self, nodes[next], "getVal", _arguments, token_3_0, n );
+						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_1 );
 						__messages.add( message );
 					}
 					// standardOutput<-print(n)
 					{
 						Object _arguments[] = { n };
-						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_2 );
+						Message message = new Message( self, standardOutput, "print", _arguments, token_3_1, token_3_2 );
 						__messages.add( message );
 					}
 					// standardOutput<-print("\"\n")
@@ -574,12 +574,10 @@ break;			}
 						Message message = new Message( self, nodes[next], "query", _arguments, null, n );
 						__messages.add( message );
 					}
-				}
-				{
 					// queryHelper(n, fromNode, ID, target, key)
 					{
 						Object _arguments[] = { n, fromNode, ID, target, key };
-						Message message = new Message( self, self, "queryHelper", _arguments, null, null );
+						Message message = new Message( self, self, "queryHelper", _arguments, n, null );
 						__messages.add( message );
 					}
 				}

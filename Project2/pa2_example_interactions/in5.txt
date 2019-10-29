@@ -1,0 +1,11 @@
+8
+query 1 68 foo
+query 2 53 bar
+query 3 68 rbp
+insert 68 foo first
+insert 68 rbp second
+insert 53 bar third
+insert 142 fizzbuzz fourth
+query 4 50 fizzbuzz
+insert 1 done finished!
+query 5 15 done
