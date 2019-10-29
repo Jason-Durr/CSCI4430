@@ -22,11 +22,11 @@ behavior Node{
     }
 
     String getVal(String key) {
-        standardOutput <- println("Here");
         if (keyVals.containsKey(key)) {
             return (String) keyVals.get(key);
         }
         try {
+            standardOutput <- println("Sleep");
             Thread.sleep(500);
         } catch (Exception except) {
             // Waiting for key

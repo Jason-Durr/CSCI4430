@@ -274,24 +274,9 @@ public class Node extends UniversalActor  {
 			index = nodeIndex;
 		}
 		public String getVal(String key) {
-			{
-				// standardOutput<-println("Here")
-				{
-					Object _arguments[] = { "Here" };
-					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
-					__messages.add( message );
-				}
+			while (!keyVals.containsKey(key)) {
 			}
-			if (keyVals.containsKey(key)) {{
-				return (String)keyVals.get(key);
-			}
-}			try {
-				Thread.sleep(500);
-			}
-			catch (Exception except) {
-			}
-
-			return (String)getVal(key);
+			return (String)keyVals.get(key);
 		}
 		public Vector getConnections() {
 			return connections;

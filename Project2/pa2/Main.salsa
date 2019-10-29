@@ -158,7 +158,7 @@ behavior Main{
     queryHelper(fromNode,fromNode, ID,  target, key);
     
   }
-  void queryHelper(int next,int fromNode, int ID, int target,String key){
+  void queryHelper(int next, int fromNode, int ID, int target, String key){
     if (next == target){
       token n = nodes[next]<-getVal(key)@
       standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"")@
@@ -169,7 +169,6 @@ behavior Main{
       token n = nodes[next]<-query(target)@
       queryHelper(n,fromNode, ID ,target, key);
     }
-
   }
 }
 
