@@ -274,24 +274,10 @@ public class Node extends UniversalActor  {
 			index = nodeIndex;
 		}
 		public String getVal(String key) {
-			{
-				// standardOutput<-println("Here")
-				{
-					Object _arguments[] = { "Here" };
-					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
-					__messages.add( message );
-				}
-			}
 			if (keyVals.containsKey(key)) {{
 				return (String)keyVals.get(key);
 			}
-}			try {
-				Thread.sleep(500);
-			}
-			catch (Exception except) {
-			}
-
-			return (String)getVal(key);
+}			return "";
 		}
 		public Vector getConnections() {
 			return connections;
@@ -303,6 +289,14 @@ public class Node extends UniversalActor  {
 			}
 		}
 		public int insert(int target, String aKey, String aValue) {
+			{
+				// standardOutput<-println(aKey)
+				{
+					Object _arguments[] = { aKey };
+					Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+					__messages.add( message );
+				}
+			}
 			int next_ind = nextIndex(target);
 			if (next_ind<0) {{
 				keyVals.put(aKey, aValue);

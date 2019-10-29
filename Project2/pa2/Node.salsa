@@ -22,16 +22,11 @@ behavior Node{
     }
 
     String getVal(String key) {
-        standardOutput <- println("Here");
         if (keyVals.containsKey(key)) {
             return (String) keyVals.get(key);
         }
-        try {
-            Thread.sleep(500);
-        } catch (Exception except) {
-            // Waiting for key
-        }
-        return (String) getVal(key);
+        
+        return "";
     }
 
     Vector getConnections() {

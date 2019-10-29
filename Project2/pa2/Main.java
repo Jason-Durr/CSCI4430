@@ -267,11 +267,12 @@ public class Main extends UniversalActor  {
 			}
 		}
 
-		String theatersFile = "theatersFile.txt";
+		String theatersFile = "";
 		String nameServer = "127.0.0.1:3030";
 		boolean isDebug = false;
 		int numNodes;
 		Node[] nodes;
+		ArrayList queryMailbox = new ArrayList();
 		public void act(String args[]) {
 			int argc = args.length;
 			if (argc>=1) {theatersFile = args[0];
@@ -439,6 +440,21 @@ break;				}
 						__messages.add( message );
 					}
 				}
+				for (int i = 0; i<queryMailbox.size(); i++){
+					String curr = (String)queryMailbox.get(i);
+					String[] arg = curr.split("@");
+					int queryID = Integer.parseInt(arg[0]);
+					fromNode = Integer.parseInt(arg[1]);
+					key = arg[2];
+					{
+						// query(queryID, fromNode, key)
+						{
+							Object _arguments[] = { queryID, fromNode, key };
+							Message message = new Message( self, self, "query", _arguments, null, null );
+							__messages.add( message );
+						}
+					}
+				}
 break;			}
 			case "query": {
 				if (tokens.length<4) {{
@@ -537,30 +553,16 @@ break;			}
 			if (next==target) {{
 				Token n = new Token("n");
 				{
-					Token token_3_1 = new Token();
-					Token token_3_2 = new Token();
 					// token n = nodes[next]<-getVal(key)
 					{
 						Object _arguments[] = { key };
 						Message message = new Message( self, nodes[next], "getVal", _arguments, null, n );
 						__messages.add( message );
 					}
-					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"")
+					// query_ender(n, fromNode, ID, target, key)
 					{
-						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"" };
-						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_1 );
-						__messages.add( message );
-					}
-					// standardOutput<-print(n)
-					{
-						Object _arguments[] = { n };
-						Message message = new Message( self, standardOutput, "print", _arguments, token_3_1, token_3_2 );
-						__messages.add( message );
-					}
-					// standardOutput<-print("\"\n")
-					{
-						Object _arguments[] = { "\"\n" };
-						Message message = new Message( self, standardOutput, "print", _arguments, token_3_2, null );
+						Object _arguments[] = { n, fromNode, ID, target, key };
+						Message message = new Message( self, self, "query_ender", _arguments, n, null );
 						__messages.add( message );
 					}
 				}
@@ -581,6 +583,24 @@ break;			}
 						__messages.add( message );
 					}
 				}
+			}
+}		}
+		public void query_ender(String value, int fromNode, int ID, int target, String key) {
+			if (!value.equals("")) {{
+				{
+					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+value+"\"\n")
+					{
+						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \""+value+"\"\n" };
+						Message message = new Message( self, standardOutput, "print", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
+				if (queryMailbox.contains(""+ID+"@"+fromNode+"@"+key)) {{
+					queryMailbox.remove(queryMailbox.indexOf(""+ID+"@"+fromNode+"@"+key));
+				}
+}			}
+}			else {{
+				queryMailbox.add(""+ID+"@"+fromNode+"@"+key);
 			}
 }		}
 	}

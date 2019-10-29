@@ -10,12 +10,18 @@ import java.lang.Math;
  */
 
 behavior Main{
-  String theatersFile = "theatersFile.txt";// Default location for list of theaters (1st cmd line argument)
+  String theatersFile = "";// Default location for list of theaters (1st cmd line argument)
                                                 // List of ip addr:port separated by newlines
   String nameServer = "127.0.0.1:3030";         // Default name server (2nd cmd line argument))
   public static boolean isDebug = false;       // Additional output for debugging (set to false when testing autograding)
   int numNodes;
   Node[] nodes;
+  
+  
+  
+
+  
+  ArrayList queryMailbox = new ArrayList();
 
   void act(String args[]){
     int argc = args.length;
@@ -109,6 +115,17 @@ behavior Main{
         String key = tokens[2];
         String value = tokens[3];
         insert(fromNode,key,value);
+        for (int i = 0; i < queryMailbox.size(); i++){
+          String curr = (String) queryMailbox.get(i);
+          String[] arg = curr.split("@");
+          int queryID = Integer.parseInt(arg[0]);
+          fromNode= Integer.parseInt(arg[1]);
+          key = arg[2];
+          query(queryID,fromNode, key);
+          // if (res == 1){
+          //   queryMailbox.remove(i);
+          // }
+        }
         break;
       }
       case "query":{
@@ -120,6 +137,7 @@ behavior Main{
         int fromNode = Integer.parseInt(tokens[2]);
         String key = tokens[3];
 		    query(queryID,fromNode, key);
+        
         break;
       }
       default:
@@ -161,15 +179,26 @@ behavior Main{
   void queryHelper(int next,int fromNode, int ID, int target,String key){
     if (next == target){
       token n = nodes[next]<-getVal(key)@
-      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"")@
-      standardOutput<-print(n)@
-      standardOutput<-print("\"\n");
+      query_ender(n,fromNode, ID ,target, key);
     }
     else {
       token n = nodes[next]<-query(target)@
       queryHelper(n,fromNode, ID ,target, key);
     }
-
+  }
+  void query_ender(String value, int fromNode, int ID, int target,String key){
+    if (!value.equals( "")){
+      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \""+value+"\"\n");
+      if (queryMailbox.contains(""+ID+"@"+fromNode+"@"+key)){
+        queryMailbox.remove(queryMailbox.indexOf(""+ID+"@"+fromNode+"@"+key));
+      }
+    }
+    else {
+      queryMailbox.add(""+ID+"@"+fromNode+"@"+key);
+          
+        
+    }
   }
 }
+
 
