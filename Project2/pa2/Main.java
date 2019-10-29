@@ -267,7 +267,7 @@ public class Main extends UniversalActor  {
 			}
 		}
 
-		String theatersFile = "theatersFile.txt";
+		String theatersFile = "";
 		String nameServer = "127.0.0.1:3030";
 		boolean isDebug = false;
 		int numNodes;
@@ -431,11 +431,13 @@ break;				}
 }				int fromNode = Integer.parseInt(tokens[1]);
 				String key = tokens[2];
 				String value = tokens[3];
+				Insert curr = ((Insert)new Insert(this).construct());
+				int target = Hash(key, numNodes);
 				{
-					// insert(fromNode, key, value)
+					// curr<-insert(fromNode, target, key, value, nodes)
 					{
-						Object _arguments[] = { fromNode, key, value };
-						Message message = new Message( self, self, "insert", _arguments, null, null );
+						Object _arguments[] = { fromNode, target, key, value, nodes };
+						Message message = new Message( self, curr, "insert", _arguments, null, null );
 						__messages.add( message );
 					}
 				}
@@ -454,11 +456,13 @@ break;				}
 }				int queryID = Integer.parseInt(tokens[1]);
 				int fromNode = Integer.parseInt(tokens[2]);
 				String key = tokens[3];
+				Query curr = ((Query)new Query(this).construct());
+				int target = Hash(key, numNodes);
 				{
-					// query(queryID, fromNode, key)
+					// curr<-query(queryID, fromNode, fromNode, target, key, standardOutput, nodes)
 					{
-						Object _arguments[] = { queryID, fromNode, key };
-						Message message = new Message( self, self, "query", _arguments, null, null );
+						Object _arguments[] = { queryID, fromNode, fromNode, target, key, standardOutput, nodes };
+						Message message = new Message( self, curr, "query", _arguments, null, null );
 						__messages.add( message );
 					}
 				}
@@ -490,98 +494,5 @@ break;			}
 			}
 			return sum%numNodes;
 		}
-		public void insert(int fromNode, String key, String value) {
-			int target = Hash(key, numNodes);
-			{
-				// insertHelper(fromNode, target, key, value)
-				{
-					Object _arguments[] = { fromNode, target, key, value };
-					Message message = new Message( self, self, "insertHelper", _arguments, null, null );
-					__messages.add( message );
-				}
-			}
-		}
-		public void insertHelper(int next, int target, String key, String value) {
-			if (next>=0) {{
-				Token n = new Token("n");
-				{
-					// token n = nodes[next]<-insert(target, key, value)
-					{
-						Object _arguments[] = { target, key, value };
-						Message message = new Message( self, nodes[next], "insert", _arguments, null, n );
-						__messages.add( message );
-					}
-				}
-				{
-					// insertHelper(n, target, key, value)
-					{
-						Object _arguments[] = { n, target, key, value };
-						Message message = new Message( self, self, "insertHelper", _arguments, null, null );
-						__messages.add( message );
-					}
-				}
-			}
-}		}
-		public void query(int ID, int fromNode, String key) {
-			int target = Hash(key, numNodes);
-			{
-				// queryHelper(fromNode, fromNode, ID, target, key)
-				{
-					Object _arguments[] = { fromNode, fromNode, ID, target, key };
-					Message message = new Message( self, self, "queryHelper", _arguments, null, null );
-					__messages.add( message );
-				}
-			}
-		}
-		public void queryHelper(int next, int fromNode, int ID, int target, String key) {
-			if (next==target) {{
-				Token n = new Token("n");
-				{
-					Token token_3_1 = new Token();
-					Token token_3_2 = new Token();
-					// token n = nodes[next]<-getVal(key)
-					{
-						Object _arguments[] = { key };
-						Message message = new Message( self, nodes[next], "getVal", _arguments, null, n );
-						__messages.add( message );
-					}
-					// standardOutput<-print("Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"")
-					{
-						Object _arguments[] = { "Request "+ID+" sent to agent "+fromNode+": Value for key \""+key+"\" stored in node "+target+": \"" };
-						Message message = new Message( self, standardOutput, "print", _arguments, n, token_3_1 );
-						__messages.add( message );
-					}
-					// standardOutput<-print(n)
-					{
-						Object _arguments[] = { n };
-						Message message = new Message( self, standardOutput, "print", _arguments, token_3_1, token_3_2 );
-						__messages.add( message );
-					}
-					// standardOutput<-print("\"\n")
-					{
-						Object _arguments[] = { "\"\n" };
-						Message message = new Message( self, standardOutput, "print", _arguments, token_3_2, null );
-						__messages.add( message );
-					}
-				}
-			}
-}			else {{
-				Token n = new Token("n");
-				{
-					// token n = nodes[next]<-query(target)
-					{
-						Object _arguments[] = { target };
-						Message message = new Message( self, nodes[next], "query", _arguments, null, n );
-						__messages.add( message );
-					}
-					// queryHelper(n, fromNode, ID, target, key)
-					{
-						Object _arguments[] = { n, fromNode, ID, target, key };
-						Message message = new Message( self, self, "queryHelper", _arguments, n, null );
-						__messages.add( message );
-					}
-				}
-			}
-}		}
 	}
 }

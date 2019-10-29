@@ -1,0 +1,20 @@
+module pa2;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math; 
+
+/*
+Actor to carry our insert commands
+*/
+
+behavior Insert{
+    Insert(){}
+
+    void insert(int next, int target, String key, String value, Node[] nodes){
+        if (next >= 0){
+            token n = nodes[next]<-insert(target,key,value);
+            insert(n, target, key, value, nodes);
+        }
+    }
+}

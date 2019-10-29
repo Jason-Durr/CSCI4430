@@ -1,0 +1,26 @@
+module pa2;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math; 
+
+/*
+Actor to carry out query commands
+*/
+
+behavior Query{
+    Query(){}
+
+    void query(int ID, int fromNode, int next, int target, String key, Object output, Node[] nodes){
+        if (next == target){
+            token n = nodes[next]<-getVal(key)@
+            output<-print("Request " + ID+" sent to agent "+ fromNode + ": Value for key \"" + key + "\" stored in node " + target + ": \"")@
+            output<-print(n)@
+            output<-print("\"\n");
+        }
+        else {
+            token n = nodes[next]<-query(target)@
+            query(ID, fromNode, n, target, key, output, nodes);
+        }
+    }
+}

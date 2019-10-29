@@ -10,7 +10,7 @@ import java.lang.Math;
  */
 
 behavior Main{
-  String theatersFile = "theatersFile.txt";// Default location for list of theaters (1st cmd line argument)
+  String theatersFile = "";// "theatersFile.txt";// Default location for list of theaters (1st cmd line argument)
                                                 // List of ip addr:port separated by newlines
   String nameServer = "127.0.0.1:3030";         // Default name server (2nd cmd line argument))
   public static boolean isDebug = false;       // Additional output for debugging (set to false when testing autograding)
@@ -108,7 +108,9 @@ behavior Main{
         int fromNode = Integer.parseInt(tokens[1]);
         String key = tokens[2];
         String value = tokens[3];
-        insert(fromNode,key,value);
+        Insert curr = new Insert();
+        int target = Hash(key,numNodes);
+        curr <- insert(fromNode, target, key, value, nodes);
         break;
       }
       case "query":{
@@ -119,7 +121,9 @@ behavior Main{
         int queryID = Integer.parseInt(tokens[1]);
         int fromNode = Integer.parseInt(tokens[2]);
         String key = tokens[3];
-		    query(queryID,fromNode, key);
+        Query curr = new Query();
+        int target = Hash(key, numNodes);
+        curr <- query(queryID, fromNode, fromNode, target, key, standardOutput, nodes);
         break;
       }
       default:
@@ -140,35 +144,6 @@ behavior Main{
       sum += key.charAt(i);
     }
     return sum % numNodes;
-  }
-  void insert(int fromNode, String key,String value){
-    int target = Hash(key,numNodes);
-    insertHelper(fromNode, target, key, value);
-  }
-
-  void insertHelper(int next, int target, String key, String value){
-    if (next >= 0){
-      token n = nodes[next]<-insert(target,key,value);
-      insertHelper(n, target, key, value);
-    }
-    
-  }
-  void query(int ID, int fromNode, String key){
-    int target = Hash(key,numNodes);
-    queryHelper(fromNode,fromNode, ID,  target, key);
-    
-  }
-  void queryHelper(int next, int fromNode, int ID, int target, String key){
-    if (next == target){
-      token n = nodes[next]<-getVal(key)@
-      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \"")@
-      standardOutput<-print(n)@
-      standardOutput<-print("\"\n");
-    }
-    else {
-      token n = nodes[next]<-query(target)@
-      queryHelper(n,fromNode, ID ,target, key);
-    }
   }
 }
 

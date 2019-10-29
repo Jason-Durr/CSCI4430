@@ -35,7 +35,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.Math;
 
-public class Node extends UniversalActor  {
+public class Insert extends UniversalActor  {
 	public static void main(String args[]) {
 		UAN uan = null;
 		UAL ual = null;
@@ -70,7 +70,7 @@ public class Node extends UniversalActor  {
 			ual = new UAL( ServiceFactory.getTheater().getLocation() + System.getProperty("identifier"));
 		}
 		RunTime.receivedMessage();
-		Node instance = (Node)new Node(uan, ual,null).construct();
+		Insert instance = (Insert)new Insert(uan, ual,null).construct();
 		gc.WeakReference instanceRef=new gc.WeakReference(uan,ual);
 		{
 			Object[] _arguments = { args };
@@ -83,18 +83,18 @@ public class Node extends UniversalActor  {
 		RunTime.finishedProcessingMessage();
 	}
 
-	public static ActorReference getReferenceByName(UAN uan)	{ return new Node(false, uan); }
-	public static ActorReference getReferenceByName(String uan)	{ return Node.getReferenceByName(new UAN(uan)); }
-	public static ActorReference getReferenceByLocation(UAL ual)	{ return new Node(false, ual); }
+	public static ActorReference getReferenceByName(UAN uan)	{ return new Insert(false, uan); }
+	public static ActorReference getReferenceByName(String uan)	{ return Insert.getReferenceByName(new UAN(uan)); }
+	public static ActorReference getReferenceByLocation(UAL ual)	{ return new Insert(false, ual); }
 
-	public static ActorReference getReferenceByLocation(String ual)	{ return Node.getReferenceByLocation(new UAL(ual)); }
-	public Node(boolean o, UAN __uan)	{ super(false,__uan); }
-	public Node(boolean o, UAL __ual)	{ super(false,__ual); }
-	public Node(UAN __uan,UniversalActor.State sourceActor)	{ this(__uan, null, sourceActor); }
-	public Node(UAL __ual,UniversalActor.State sourceActor)	{ this(null, __ual, sourceActor); }
-	public Node(UniversalActor.State sourceActor)		{ this(null, null, sourceActor);  }
-	public Node()		{  }
-	public Node(UAN __uan, UAL __ual, Object obj) {
+	public static ActorReference getReferenceByLocation(String ual)	{ return Insert.getReferenceByLocation(new UAL(ual)); }
+	public Insert(boolean o, UAN __uan)	{ super(false,__uan); }
+	public Insert(boolean o, UAL __ual)	{ super(false,__ual); }
+	public Insert(UAN __uan,UniversalActor.State sourceActor)	{ this(__uan, null, sourceActor); }
+	public Insert(UAL __ual,UniversalActor.State sourceActor)	{ this(null, __ual, sourceActor); }
+	public Insert(UniversalActor.State sourceActor)		{ this(null, null, sourceActor);  }
+	public Insert()		{  }
+	public Insert(UAN __uan, UAL __ual, Object obj) {
 		//decide the type of sourceActor
 		//if obj is null, the actor must be the startup actor.
 		//if obj is an actorReference, this actor is created by a remote actor
@@ -117,7 +117,7 @@ public class Node extends UniversalActor  {
 			      setSource(sourceActor.getUAN(), sourceActor.getUAL());
 			      activateGC();
 			    }
-			    createRemotely(__uan, __ual, "pa2.Node", sourceRef);
+			    createRemotely(__uan, __ual, "pa2.Insert", sourceRef);
 			  }
 
 			  // local creation
@@ -175,24 +175,18 @@ public class Node extends UniversalActor  {
 		}
 	}
 
-	public UniversalActor construct (int nodeIndex) {
-		Object[] __arguments = { new Integer(nodeIndex) };
-		this.send( new Message(this, this, "construct", __arguments, null, null) );
-		return this;
-	}
-
-	public UniversalActor construct() {
-		Object[] __arguments = { };
+	public UniversalActor construct () {
+		Object[] __arguments = {  };
 		this.send( new Message(this, this, "construct", __arguments, null, null) );
 		return this;
 	}
 
 	public class State extends UniversalActor .State {
-		public Node self;
+		public Insert self;
 		public void updateSelf(ActorReference actorReference) {
-			((Node)actorReference).setUAL(getUAL());
-			((Node)actorReference).setUAN(getUAN());
-			self = new Node(false,getUAL());
+			((Insert)actorReference).setUAL(getUAL());
+			((Insert)actorReference).setUAN(getUAN());
+			self = new Insert(false,getUAL());
 			self.setUAN(getUAN());
 			self.setUAL(getUAL());
 			self.activateGC();
@@ -204,11 +198,9 @@ public class Node extends UniversalActor  {
 
 		public State(UAN __uan, UAL __ual) {
 			super(__uan, __ual);
-			addClassName( "pa2.Node$State" );
+			addClassName( "pa2.Insert$State" );
 			addMethodsForClasses();
 		}
-
-		public void construct() {}
 
 		public void process(Message message) {
 			Method[] matches = getMatches(message.getMethodName());
@@ -265,67 +257,28 @@ public class Node extends UniversalActor  {
 			}
 		}
 
-		Map keyVals = new HashMap();
-		Vector connections;
-		int index;
-		int numNodes;
-		void construct(int nodeIndex){
-			connections = new Vector();
-			index = nodeIndex;
+		void construct(){
 		}
-		public String getVal(String key) {
-			if (keyVals.containsKey(key)) {{
-				return (String)keyVals.get(key);
-			}
-}			try {
+		public void insert(int next, int target, String key, String value, Node[] nodes) {
+			if (next>=0) {{
+				Token n = new Token("n");
 				{
-					// standardOutput<-println("Sleep")
+					// token n = nodes[next]<-insert(target, key, value)
 					{
-						Object _arguments[] = { "Sleep" };
-						Message message = new Message( self, standardOutput, "println", _arguments, null, null );
+						Object _arguments[] = { target, key, value };
+						Message message = new Message( self, nodes[next], "insert", _arguments, null, n );
 						__messages.add( message );
 					}
 				}
-				Thread.sleep(500);
-			}
-			catch (Exception except) {
-			}
-
-			return (String)getVal(key);
-		}
-		public Vector getConnections() {
-			return connections;
-		}
-		public void setConnections(int numNodes, int n) {
-			this.numNodes = numNodes;
-			for (int i = 0; i<n; i++){
-				connections.add((index+(int)Math.pow(2, i))%numNodes);
-			}
-		}
-		public int insert(int target, String aKey, String aValue) {
-			int next_ind = nextIndex(target);
-			if (next_ind<0) {{
-				keyVals.put(aKey, aValue);
-				return -1;
-			}
-}			else {{
-				return (int)connections.get(next_ind);
+				{
+					// insert(n, target, key, value, nodes)
+					{
+						Object _arguments[] = { n, target, key, value, nodes };
+						Message message = new Message( self, self, "insert", _arguments, null, null );
+						__messages.add( message );
+					}
+				}
 			}
 }		}
-		public int query(int target) {
-			int next_ind = nextIndex(target);
-			return (int)connections.get(next_ind);
-		}
-		public int nextIndex(int nodeid) {
-			if (nodeid==index) {{
-				return -1;
-			}
-}			else {if (nodeid>index) {{
-				return (int)(Math.log(nodeid-index)/Math.log(2));
-			}
-}			else {{
-				return (int)(Math.log(nodeid-index+numNodes)/Math.log(2));
-			}
-}}		}
 	}
 }
