@@ -40,6 +40,6 @@ curious_set(N1,N2,N3,N4) :-
     write(N1),write(','),
     write(N2),write(','),
     write(N3),write(','),
-    write(N4),nl.
+    write(N4).
     % write(N3,',').
     % write(N4,'\n').
