@@ -1,0 +1,204 @@
+module pa2;
+
+import java.io.*;
+import java.util.*;
+import java.lang.Math; 
+
+/* Main.salsa
+ *
+ * Creates the distributed hash table and interfaces between it and the user
+ */
+
+behavior Main{
+  String theatersFile = "";// Default location for list of theaters (1st cmd line argument)
+                                                // List of ip addr:port separated by newlines
+  String nameServer = "127.0.0.1:3030";         // Default name server (2nd cmd line argument))
+  public static boolean isDebug = false;       // Additional output for debugging (set to false when testing autograding)
+  int numNodes;
+  Node[] nodes;
+  
+  
+  
+
+  
+  ArrayList queryMailbox = new ArrayList();
+
+  void act(String args[]){
+    int argc = args.length;
+    if(argc>=1) theatersFile=args[0];
+    if(argc>=2) nameServer = args[1];
+    if(argc>=3) isDebug = Boolean.parseBoolean(args[2]);
+    
+    //Get n value from stdin
+    if(isDebug) standardOutput<-print("Enter n: ");
+    token n = standardInput<-readLine();
+    
+    //create actors for DHT, then begin listening for commands
+    createDHT(n)@checkForInput();
+  }
+  
+  //Initialize DHT with 2^n nodes at correct theaters
+  //Each node is given references to the nodes it can contact, but no more
+  void createDHT(String n_string){
+    
+    int n = Integer.parseInt(n_string);
+    
+    numNodes = (int) Math.pow(2,n);
+
+    nodes = new Node[numNodes];
+
+    // read available theaters
+    Vector theaters = new Vector();
+    String theater;
+    if(theatersFile != ""){
+      try {
+        BufferedReader in = new BufferedReader(new FileReader(theatersFile));
+        while ((theater = in.readLine())!= null){
+          theaters.add(theater);
+        }
+        in.close(); 
+      } catch (IOException ioe){
+        standardError<-println("[error] Can't open the file "+theatersFile+" for reading. Will create DHT nodes locally.");
+        theatersFile = "";
+      }
+    }
+
+    if(theatersFile != ""){
+      // create actors at theaters
+      // gives each theater an approximately equal number of actors
+      for (int i=0; i<numNodes; i++){
+        String uan_str = "uan://"+nameServer+"/id"+i;
+        String ual_str = "rmsp://"+theaters.get(i%theaters.size())+"/id"+i;
+        
+        if (isDebug){
+          standardOutput<-println("Creating node "+uan_str+" at "+ual_str);
+        }
+        nodes[i] = new Node(i) at (new UAN(uan_str), new UAL(ual_str));
+      }
+      for (int i = 0; i < numNodes; i++) {
+        nodes[i]<-setConnections(numNodes, n);
+      }
+    }
+    else{
+      //If no theaters file, create actors locally
+      for (int i=0; i<numNodes; i++){        
+        if (isDebug){
+          standardOutput<-println("Creating node "+i+" locally");
+        }
+        nodes[i] = new Node(i);
+      }
+      for (int i = 0; i < numNodes; i++) {
+        nodes[i]<-setConnections(numNodes, n);
+      }
+    }
+   
+  }
+  
+  //whenever input has been processed, this func ensures there is always more input
+  //(cannot just use an infinite loop!)
+  void checkForInput(){
+    standardInput<-readLine()@handleInput(token)@checkForInput();
+  }
+  
+  //Parse input, and handle commands given by STDIN
+  void handleInput(String input){
+    
+    String[] tokens = input.split(" "); 
+    
+    switch (tokens[0]) {
+      case "insert":{
+        if(tokens.length < 4) {
+          standardError<-println("[error] Usage: insert <fromNode> <key> <value>");
+          break;
+        }
+        int fromNode = Integer.parseInt(tokens[1]);
+        String key = tokens[2];
+        String value = tokens[3];
+        insert(fromNode,key,value);
+        for (int i = 0; i < queryMailbox.size(); i++){
+          String curr = (String) queryMailbox.get(i);
+          String[] arg = curr.split("@");
+          int queryID = Integer.parseInt(arg[0]);
+          fromNode= Integer.parseInt(arg[1]);
+          key = arg[2];
+          query(queryID,fromNode, key);
+          // if (res == 1){
+          //   queryMailbox.remove(i);
+          // }
+        }
+        break;
+      }
+      case "query":{
+        if(tokens.length < 4) {
+          standardError<-println("[error] Usage: query <queryID> <fromNode> <key>");
+          break;
+        }
+        int queryID = Integer.parseInt(tokens[1]);
+        int fromNode = Integer.parseInt(tokens[2]);
+        String key = tokens[3];
+		    query(queryID,fromNode, key);
+        
+        break;
+      }
+      default:
+        standardError<-println("[error] Command \""+tokens[0]+"\" not recognized.");
+    }
+  }
+
+  //Wrapper for print
+  //Used if a node wants to print to STDOUT on the I/O theater
+  void println(String str){
+    standardOutput<-println(str);
+  }
+
+  // Given a key, returns what node that key should be stored in
+  int Hash(String key, int numNodes){
+    int sum = 0;
+    for (int i = 0; i < key.length(); i++){
+      sum += key.charAt(i);
+    }
+    return sum % numNodes;
+  }
+  void insert(int fromNode, String key,String value){
+    int target = Hash(key,numNodes);
+    insertHelper(fromNode, target, key, value);
+  }
+
+  void insertHelper(int next, int target, String key, String value){
+    if (next >= 0){
+      token n = nodes[next]<-insert(target,key,value);
+      insertHelper(n, target, key, value);
+    }
+    
+  }
+  void query(int ID, int fromNode, String key){
+    int target = Hash(key,numNodes);
+    queryHelper(fromNode,fromNode, ID,  target, key);
+    
+  }
+  void queryHelper(int next,int fromNode, int ID, int target,String key){
+    if (next == target){
+      token n = nodes[next]<-getVal(key)@
+      query_ender(n,fromNode, ID ,target, key);
+    }
+    else {
+      token n = nodes[next]<-query(target)@
+      queryHelper(n,fromNode, ID ,target, key);
+    }
+  }
+  void query_ender(String value, int fromNode, int ID, int target,String key){
+    if (!value.equals( "")){
+      standardOutput<-print("Request " + ID+" sent to agent "+ fromNode+ ": Value for key \"" + key + "\" stored in node " + target + ": \""+value+"\"\n");
+      if (queryMailbox.contains(""+ID+"@"+fromNode+"@"+key)){
+        queryMailbox.remove(queryMailbox.indexOf(""+ID+"@"+fromNode+"@"+key));
+      }
+    }
+    else {
+      queryMailbox.add(""+ID+"@"+fromNode+"@"+key);
+          
+        
+    }
+  }
+}
+
+

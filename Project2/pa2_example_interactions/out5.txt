@@ -1,0 +1,7 @@
+Request 1 sent to agent 68: Value for key "foo" stored in node 68: "first"
+Request 3 sent to agent 68: Value for key "rbp" stored in node 68: "second"
+Request 2 sent to agent 53: Value for key "bar" stored in node 53: "third"
+Request 4 sent to agent 50: Value for key "fizzbuzz" stored in node 142: "fourth"
+Request 5 sent to agent 15: Value for key "done" stored in node 166: "finished!"
+
+

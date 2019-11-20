@@ -1,0 +1,7 @@
+10
+insert 1 big abcde
+query 1 2 big
+insert 2 small fghijk
+query 2 90 small
+insert 10 medium lmno
+query 3 300 medium

@@ -1,0 +1,10 @@
+rainy(seattle).
+rainy(rochester).
+rainy(b).
+rainy(c).
+cold(c).
+cold(b).
+cold(rochester).
+snowy(X) :- not(X = c).
+snowy(X) :- rainy(X), cold(X).
+snowy(troy).

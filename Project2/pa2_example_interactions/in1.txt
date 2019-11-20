@@ -1,0 +1,5 @@
+4
+insert 2 testing foo
+insert 1 bestclass ProgLang
+query 3 8 bestclass
+query 12 1 testing

@@ -1,0 +1,2 @@
+Request 9 sent to agent 20: Value for key "SALSA" stored in node 52: "isAlsoGreat"
+Request 2 sent to agent 36: Value for key "actors" stored in node 12: "areTheBest"

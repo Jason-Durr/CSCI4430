@@ -1,0 +1,5 @@
+2
+query 1 1 notthereyet
+query 3 2 alsomissing
+insert 2 notthereyet nowitis
+insert 1 alsomissing nowitsnot
