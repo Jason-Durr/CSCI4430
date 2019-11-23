@@ -2,7 +2,7 @@
 main() :-
     curious_set(A,B,C,D).
 
-% Makes sure number isnt in the original curious set of integers
+% Makes sure number isn't in the original curious set of integers
 not_in_og(N1) :- 
     N1 \= 1,
     N1 \= 3,
