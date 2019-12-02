@@ -22,18 +22,19 @@ process(Start, Goal, 0, 0,_ ,_) :- Start is Goal.
 %otherwise find the next even number and add it
 process(Start, Goal, NumEven, NumOdd, "sum", Last) :- 
     NumEven > 0,
-    between(Last, 120, N1),
+    between(Last, 128, N1),
     0 is N1 mod 2,
     NewEven is NumEven-1,
     NewStart is Start + N1,
     NewLast is N1 + 1,
     process(NewStart, Goal, NewEven, NumOdd, "sum", NewLast),
-    write(N1),nl.
+    write(N1),
+    nl.
 
 % Otherwise find the next odd number and add it
 process(Start, Goal, 0, NumOdd, "sum", Last):- 
     NumOdd > 0,
-    between(Last, 120, N1),
+    between(Last, 128, N1),
     1 is N1 mod 2,
     NewOdd is NumOdd-1,
     NewStart is Start + N1,
@@ -45,7 +46,7 @@ process(Start, Goal, 0, NumOdd, "sum", Last):-
 % otherwise multiply the next even number
 process(Start, Goal, NumEven, NumOdd, "multiply", Last) :- 
     NumEven > 0,
-    between(Last, 120, N1),
+    between(Last, 128, N1),
     0 is N1 mod 2,
     NewEven is NumEven-1,
     NewStart is Start * N1,
@@ -57,7 +58,7 @@ process(Start, Goal, NumEven, NumOdd, "multiply", Last) :-
 % otherwise multiply start by the next odd integer
 process(Start, Goal, 0, NumOdd, "multiply", Last):- 
     NumOdd > 0,
-    between(Last, 120, N1),
+    between(Last, 128, N1),
     1 is N1 mod 2,
     NewOdd is NumOdd-1,
     NewStart is Start * N1,
@@ -84,13 +85,13 @@ main(W) :-
         input(Num1, "even", "sum", Num2, L, []) -> process(0, Num2, Num1, 0, "sum", 0);
 
         % Case where they only ask for only odd numbers and sum operation
-        input(Num1, "odd", "sum", Num2, L, []) ->  process(0, Num2, 0,Num1,"sum",0);
+        input(Num1, "odd", "sum", Num2, L, []) ->  process(0, Num2, 0, Num1, "sum", 0);
 
         % Case where they only ask for only even numbers and multiply operation
         input(Num1, "even", "multiply", Num2, L, []) -> process(1, Num2, Num1, 0, "multiply", 0);
 
         % Case where they only ask for only odd numbers and multiply operation
-        input(Num1, "odd", "multiply", Num2, L, []) ->  process(1,Num2, 0, Num1, "multiply", 0);
+        input(Num1, "odd", "multiply", Num2, L, []) ->  process(1, Num2, 0, Num1, "multiply", 0);
 
         % Case for when they ask for both even AND odd numbers for the sum operation
         input(Num1, _, Num2, _, "sum", Num3, L, []) -> process(0, Num3, Num1, Num2, "sum", 0);
