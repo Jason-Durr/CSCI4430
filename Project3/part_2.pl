@@ -82,22 +82,22 @@ main(W) :-
     split_string(S, " ", "", L),
     (   
         % Case where they only ask for only even numbers and sum operation
-        input(Num1, "even", "sum", Num2, L, []) -> process(0, Num2, Num1, 0, "sum", 0);
+        input(Num1, "even", "sum", Num2, L, []) -> (process(0, Num2, Num1, 0, "sum", 0);write("No Solution"));
 
         % Case where they only ask for only odd numbers and sum operation
-        input(Num1, "odd", "sum", Num2, L, []) ->  process(0, Num2, 0, Num1, "sum", 0);
+        input(Num1, "odd", "sum", Num2, L, []) ->  (process(0, Num2, 0, Num1, "sum", 0);write("No Solution"));
 
         % Case where they only ask for only even numbers and multiply operation
-        input(Num1, "even", "multiply", Num2, L, []) -> process(1, Num2, Num1, 0, "multiply", 0);
+        input(Num1, "even", "multiply", Num2, L, []) ->( process(1, Num2, Num1, 0, "multiply", 0);write("No Solution"));
 
         % Case where they only ask for only odd numbers and multiply operation
-        input(Num1, "odd", "multiply", Num2, L, []) ->  process(1, Num2, 0, Num1, "multiply", 0);
+        input(Num1, "odd", "multiply", Num2, L, []) -> ( process(1, Num2, 0, Num1, "multiply", 0);write("No Solution"));
 
         % Case for when they ask for both even AND odd numbers for the sum operation
-        input(Num1, _, Num2, _, "sum", Num3, L, []) -> process(0, Num3, Num1, Num2, "sum", 0);
+        input(Num1, _, Num2, _, "sum", Num3, L, []) -> (process(0, Num3, Num1, Num2, "sum", 0);write("No Solution"));
 
         % Case for when they ask for both even AND odd numbers for the multiply operation
-        input(Num1, _, Num2, _, "multiply", Num3, L, []) -> process(1, Num3, Num1, Num2, "multiply", 0);
+        input(Num1, _, Num2, _, "multiply", Num3, L, []) -> (process(1, Num3, Num1, Num2, "multiply", 0);write("No Solution"));
 
         % Otherwise it is an invalid string
         write("Invalid String")
