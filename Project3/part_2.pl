@@ -23,7 +23,7 @@ display_answer( [Head|Tail] ) :-
 
 % Function that takes in two numbers and does the correct operation and puts it in res
 % Base Case if there are no more even or odd to use the result is if Start is Goal
-process(Start, Goal, 0, 0,_ ,_,List) :- Start is Goal,display_answer(List).
+process(Start, Goal, 0, 0,_ ,_, List) :- Start is Goal,display_answer(List).
 
 % Otherwise find the next even number and add it
 process(Start, Goal, NumEven, NumOdd, "sum", Last, List) :- 
