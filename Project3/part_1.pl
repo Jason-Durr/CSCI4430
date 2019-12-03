@@ -1,6 +1,6 @@
 %% Runs the program to find curious set of integers
 main() :-
-    curious_set(A,B,C,D).
+    curious_set(_,_,_,_).
 
 % Makes sure number isn't in the original curious set of integers
 not_in_og(N1) :- 
